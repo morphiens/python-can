@@ -27,6 +27,7 @@ __all__ = [
     "slcan",
     "socketcan",
     "socketcand",
+    "morphle_eth2can",
     "systec",
     "udp_multicast",
     "usb2can",
@@ -59,6 +60,7 @@ BACKENDS: Dict[str, Tuple[str, str]] = {
     "neousys": ("can.interfaces.neousys", "NeousysBus"),
     "etas": ("can.interfaces.etas", "EtasBus"),
     "socketcand": ("can.interfaces.socketcand", "SocketCanDaemonBus"),
+    "morphle_eth2can": ("can.interfaces.morphle_eth2can", "MorphleCanBus"),
 }
 
 
