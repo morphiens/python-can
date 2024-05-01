@@ -105,8 +105,8 @@ class MorphleCanBus(can.BusABC):
             for i in range(int(len(self.__receive_buffer) / self.__ethcan_message_fixed_len)):
                 can_frame = self.__receive_buffer[
                             i * self.__ethcan_message_fixed_len:(i + 1) * self.__ethcan_message_fixed_len]
-                if self.__receive_buffer[i * self.__ethcan_message_fixed_len] == self.__ethcan_message_head:
-                    print("[{}] full eth2can message: {}".format(i, can_frame))
+                if self.__receive_buffer[i * self.__ethcan_message_fixed_len] <= self.__ethcan_message_head:
+                    log.debug("[{}] full eth2can message: {}".format(i, can_frame))
                     self.__message_buffer.append(can.Message(
                         arbitration_id=struct.unpack(self.__COMMAND_STRUCT_HEADER, bytes(can_frame[:5]))[1],
                         data=can_frame[5:],
@@ -114,7 +114,7 @@ class MorphleCanBus(can.BusABC):
                         timestamp=0.0,
                     ))
                 else:
-                    print("[{}] invalid eth2can message, Please check the eth2can configuration. "
+                    log.error("[{}] invalid eth2can message, Please check the eth2can configuration. "
                           " Contact the Author more details: {}".format(i, can_frame))
 
             self.__receive_buffer = self.__receive_buffer[
@@ -126,7 +126,7 @@ class MorphleCanBus(can.BusABC):
                 if len(self.__message_buffer) == 0
                 else self.__message_buffer.popleft()
             )
-            log.info("received can message: " + str(can_message))
+            log.debug("received can message: " + str(can_message))
             return can_message, False
 
         except Exception as exc:
@@ -134,7 +134,7 @@ class MorphleCanBus(can.BusABC):
             raise can.CanError(f"Failed to receive: {exc}  {traceback.format_exc()}")
 
     def _tcp_send(self, msg):
-        log.info(f"Sending TCP Message: '{msg}'")
+        log.debug(f"Sending TCP Message: '{msg}'")
         self.__socket.sendall(msg)
 
     def send(self, msg, timeout=None):
@@ -143,7 +143,7 @@ class MorphleCanBus(can.BusABC):
         :param msg: A message object.
         :param timeout: Ignored
         """
-        log.info("canMessage arbitration_id={} data={} dlc={} timestamp={}".format(msg.arbitration_id,
+        log.debug("canMessage arbitration_id={} data={} dlc={} timestamp={}".format(msg.arbitration_id,
                                                                                    msg.data, msg.dlc, msg.timestamp))
         header_payload = struct.pack(self.__COMMAND_STRUCT_HEADER, self.__ethcan_message_head, msg.arbitration_id)
         homing_payload = header_payload + msg.data
