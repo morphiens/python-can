@@ -34,7 +34,7 @@ def connect_to_server(s, host, port):
 
 
 class MorphleCanBus(can.BusABC):
-    def __init__(self, host, port, can_filters=None, **kwargs):
+    def __init__(self, channel, host, port, can_filters=None, **kwargs):
         """Connects to a CAN bus served by socketcand.
 
         1. Make UOTEK can port as server
