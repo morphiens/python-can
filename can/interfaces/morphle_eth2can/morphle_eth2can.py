@@ -70,7 +70,7 @@ class MorphleCanBus(can.BusABC):
         self.channel_info = f"morphle_eth2can connecting on {host}:{port}"
         connect_to_server(self.__socket, self.__host, self.__port)
 
-        log.info(
+        log.error(
             f"morphle_eth2can: started socket server at address {self.__socket.getsockname()}"
         )
 
@@ -95,7 +95,7 @@ class MorphleCanBus(can.BusABC):
         try:
             if not ready_receive_sockets:
                 # socket wasn't readable or timeout occurred
-                log.debug("Socket not ready")
+                # log.debug("Socket not ready")
                 return None, False
 
             msg = self.__socket.recv(1024)  # may contain multiple messages
