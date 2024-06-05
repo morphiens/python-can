@@ -17,8 +17,8 @@ import can
 log = logging.getLogger(__name__)
 
 
-def connect_to_server(s, host, port):
-    timeout_ms = 10000
+def connect_to_server(s, host, port, timeout):
+    timeout_ms = timeout*1000
     now = time.time() * 1000
     end_time = now + timeout_ms
     while now < end_time:
@@ -27,6 +27,7 @@ def connect_to_server(s, host, port):
             return
         except Exception as e:
             log.warning(f"Failed to bind to server: {type(e)} Message: {e}")
+            time.sleep(0.5)
             now = time.time() * 1000
     raise TimeoutError(
         f"connect_to_server: Failed to connect server for {timeout_ms} ms"
@@ -34,7 +35,7 @@ def connect_to_server(s, host, port):
 
 
 class MorphleCanBus(can.BusABC):
-    def __init__(self, channel, host, port, can_filters=None, **kwargs):
+    def __init__(self, channel, host, port, can_filters=None, timeout=10, **kwargs):
         """Connects to a CAN bus served by socketcand.
 
         1. Make UOTEK can port as server
@@ -63,12 +64,13 @@ class MorphleCanBus(can.BusABC):
 
         self.__host = host
         self.__port = port
+        self.__timeout = timeout
 
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__message_buffer = deque()
         self.__receive_buffer = []
         self.channel_info = f"morphle_eth2can connecting on {host}:{port}"
-        connect_to_server(self.__socket, self.__host, self.__port)
+        connect_to_server(self.__socket, self.__host, self.__port, self.__timeout)
 
         log.error(
             f"morphle_eth2can: started socket server at address {self.__socket.getsockname()}"
@@ -153,5 +155,6 @@ class MorphleCanBus(can.BusABC):
 
     def shutdown(self):
         """Stops all active periodic tasks and closes the socket."""
+        log.info("Shutting down morphle_eth2can bus")
         super().shutdown()
         self.__socket.close()
