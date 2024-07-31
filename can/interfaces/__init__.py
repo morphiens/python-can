@@ -60,7 +60,7 @@ BACKENDS: Dict[str, Tuple[str, str]] = {
     "neousys": ("can.interfaces.neousys", "NeousysBus"),
     "etas": ("can.interfaces.etas", "EtasBus"),
     "socketcand": ("can.interfaces.socketcand", "SocketCanDaemonBus"),
-    "morphle_eth2can": ("can.interfaces.morphle_eth2can", "MorphleCanBus"),
+    "morphle_eth2can": ("canserver.pythoncan.can.interfaces.morphle_eth2can", "MorphleCanBus"),
 }
 
 
