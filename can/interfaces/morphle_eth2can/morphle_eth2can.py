@@ -1,7 +1,7 @@
 """
 Interface to morphle socket eth2can
 Authors: Ashish Manmode
-https://www.uotek.com/pro_view-236.html
+https://www.uotek.com/pro_view-236.html__name__
 https://www.uotek.com/Uploads/file/20230210/20230210143551_12219.pdf
 """
 import logging
@@ -14,7 +14,7 @@ from collections import deque
 
 import can
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("can_comm_logger")
 
 
 def connect_to_server(s, host, port):

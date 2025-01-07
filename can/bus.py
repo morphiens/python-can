@@ -29,7 +29,7 @@ import can.typechecking
 from can.broadcastmanager import CyclicSendTaskABC, ThreadBasedCyclicSendTask
 from can.message import Message
 
-LOG = logging.getLogger(__name__)
+LOG = logging.getLogger("can_comm_logger")
 
 
 class BusState(Enum):
